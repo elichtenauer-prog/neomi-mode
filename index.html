@@ -386,6 +386,34 @@ html.cur,html.cur *{cursor:none!important}
 .tag{position:fixed;z-index:85;pointer-events:none;width:min(46vw,640px);transform:translate(-50%,-50%) rotate(var(--r));animation:tag 2.8s var(--e) forwards}
 @keyframes tag{0%{opacity:0;clip-path:inset(0 100% 0 0)}20%{opacity:1;clip-path:inset(0 0 0 0)}80%{opacity:1}100%{opacity:0}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}body::after{animation:none}}
+
+/* ── mobile : carrousels avec flèches, film lisible, matière resserrée (04.11) ── */
+.car-arr{display:none}
+.film-hint{display:none}
+@keyframes ovpulse{0%{box-shadow:0 0 0 0 rgba(241,233,214,.55)}100%{box-shadow:0 0 0 22px rgba(241,233,214,0)}}
+@media (max-width:860px){
+.car-arr{display:grid;place-items:center;position:absolute;top:var(--at,50%);transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:var(--cream);color:var(--ink);z-index:6;border:0;box-shadow:0 8px 20px -8px rgba(0,0,0,.7);font:700 20px/1 var(--f-sw);transition:opacity .3s}
+.car-arr.prev{left:10px}.car-arr.next{right:10px}.car-arr[disabled]{opacity:0;pointer-events:none}
+.track{gap:12px;align-items:center}
+.track-stick{scroll-padding-inline:max(var(--pad),var(--gl));scrollbar-width:none}.track-stick::-webkit-scrollbar{display:none}
+.shot{height:auto!important;width:86vw;scroll-snap-align:center}
+.shot.h{width:92vw}
+.shot img{inset:0;width:100%;transform:none!important}
+.track .end{width:78vw;padding-bottom:0;justify-content:center;scroll-snap-align:center}
+.car-host{position:relative}
+.steps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;margin-inline:calc(-1 * max(var(--pad),var(--gl))) calc(-1 * max(var(--pad),var(--gr)));padding-inline:max(var(--pad),var(--gl)) max(var(--pad),var(--gr));scroll-padding-inline:max(var(--pad),var(--gl));scrollbar-width:none}
+.steps::-webkit-scrollbar{display:none}
+.steps li{flex:0 0 82vw;scroll-snap-align:start}
+.beton{padding-top:0}
+.beton-bg{transform:none!important;top:0}
+.det-head{min-height:0;padding-top:56vw}
+.details{margin-top:30px}
+}
+@media (max-width:700px){
+.film-cover .play{flex-direction:column;align-items:flex-start;gap:16px}
+.play .ov{animation:ovpulse 1.8s ease-out infinite}
+.film-hint{display:inline-flex;white-space:nowrap;align-items:center;gap:8px;height:38px;padding:0 16px;border-radius:999px;background:var(--cream);color:var(--ink);font:700 11px/1 var(--f-sw);letter-spacing:.12em;text-transform:uppercase}
+}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -463,7 +491,7 @@ html.cur,html.cur *{cursor:none!important}
     <video id="filmV" preload="none" playsinline poster="a/vid/poster-film.jpg"><source src="a/vid/film.mp4" type="video/mp4"></video>
     <div class="film-cover">
       <span class="lab">03 — Film</span><span class="lab">0:40 · son</span>
-      <button class="play" id="play" aria-label="Lancer le film El Barrio avec le son"><span class="ov"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z" fill="currentColor"/></svg></span><span class="tt">El Barrio<br>de noche</span></button>
+      <button class="play" id="play" aria-label="Lancer le film El Barrio avec le son"><span class="ov"><svg viewBox="0 0 10 12" aria-hidden="true"><path d="M0 0L10 6L0 12Z" fill="currentColor"/></svg></span><span class="tt">El Barrio<br>de noche</span><span class="film-hint" aria-hidden="true">▶ Regarder le film · 0:40</span></button>
       <a class="lab credit" href="https://www.klap-studio.ch" target="_blank" rel="noopener">Réalisation <b>Klap Studio</b></a>
     </div>
     <div class="film-ui"><button class="lab" id="fPause">Pause</button><button class="lab" id="fMute">Couper le son</button></div>
@@ -683,7 +711,7 @@ $$('svg[data-sk]').forEach(buildSketch);
 })();
 
 /* ── apparitions (visibles au repos) ── */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('pre');io.unobserve(e.target);}}),{rootMargin:'0px 0px -10% 0px'});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('pre');io.unobserve(e.target);}}),{rootMargin:innerWidth<861?'0px 0px 15% 0px':'0px 0px -10% 0px'});
 requestAnimationFrame(()=>$$('.rv').forEach((el,i)=>{if(!RM&&el.getBoundingClientRect().top>innerHeight){el.classList.add('pre');el.style.transitionDelay=((i%4)*70)+'ms';} io.observe(el);}));
 
 /* ── visionneuse ── */
@@ -765,4 +793,19 @@ $('#copy').onclick=async()=>{const b=$('#copy'),t=$('#mail').textContent; try{aw
 (function(){const T=['a/img/title-barrio.webp','a/img/title-noche.webp','a/img/title-mano.webp','a/img/title-hablemos.webp']; let b='';
   addEventListener('keydown',e=>{if(e.target.closest('input,textarea'))return; b=(b+e.key.toLowerCase()).slice(-6); if(b!=='barrio')return; b='';
     T.forEach((s,i)=>setTimeout(()=>{const im=new Image(); im.src=A(s); im.className='tag'; im.alt=''; im.style.left=(18+Math.random()*64)+'vw'; im.style.top=(16+Math.random()*68)+'vh'; im.style.setProperty('--r',((Math.random()-.5)*14)+'deg'); document.body.appendChild(im); setTimeout(()=>im.remove(),2900);},i*260));});})();
+
+/* ── carrousels mobiles : flèches gauche / droite ── */
+(function(){
+  function car(scroller,host,itemSel,aimSel){
+    const mk=(c,t,l)=>{const b=document.createElement('button');b.type='button';b.className='car-arr '+c;b.setAttribute('aria-label',l);b.textContent=t;host.appendChild(b);return b;};
+    const p=mk('prev','←','Image précédente'), n=mk('next','→','Image suivante');
+    const step=()=>{const it=scroller.querySelector(itemSel);return it?it.getBoundingClientRect().width+12:scroller.clientWidth*.8;};
+    p.onclick=()=>scroller.scrollBy({left:-step(),behavior:'smooth'}); n.onclick=()=>scroller.scrollBy({left:step(),behavior:'smooth'});
+    const up=()=>{p.disabled=scroller.scrollLeft<8; n.disabled=scroller.scrollLeft+scroller.clientWidth>scroller.scrollWidth-8;
+      if(aimSel){const a=scroller.querySelector(aimSel); if(a){const r=a.getBoundingClientRect(), h=host.getBoundingClientRect(); host.style.setProperty('--at',(r.top-h.top+r.height/2)+'px');}}};
+    scroller.addEventListener('scroll',up,{passive:true}); addEventListener('resize',up); addEventListener('load',up); up();
+  }
+  const ts=$('#trackWrap .track-stick'); if(ts) car(ts,$('#trackWrap'),'.shot',null);
+  const st=$('#mano .steps'); if(st){const w=document.createElement('div'); w.className='car-host'; st.parentNode.insertBefore(w,st); w.appendChild(st); car(st,w,'li','li .vis');}
+})();
 </script>
