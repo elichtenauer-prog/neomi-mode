@@ -414,6 +414,21 @@ html.cur,html.cur *{cursor:none!important}
 .play .ov{animation:ovpulse 1.8s ease-out infinite}
 .film-hint{display:inline-flex;white-space:nowrap;align-items:center;gap:8px;height:38px;padding:0 16px;border-radius:999px;background:var(--cream);color:var(--ink);font:700 11px/1 var(--f-sw);letter-spacing:.12em;text-transform:uppercase}
 }
+
+@media (max-width:860px){
+.details{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:16px;margin-inline:calc(-1 * max(var(--pad),var(--gl))) calc(-1 * max(var(--pad),var(--gr)));padding:20px max(var(--pad),var(--gr)) 8px max(var(--pad),var(--gl));scroll-padding-inline:max(var(--pad),var(--gl));scrollbar-width:none}
+.details::-webkit-scrollbar{display:none}
+.details .det{flex:0 0 74vw;scroll-snap-align:start;transform:rotate(var(--r))!important}
+.js .details .det.pre{opacity:1}
+.murs-body{padding-top:28px;row-gap:28px}
+.murs-host{grid-column:1 / -1}
+.murs-car{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:16px;margin-inline:calc(-1 * max(var(--pad),var(--gl))) calc(-1 * max(var(--pad),var(--gr)));padding:20px max(var(--pad),var(--gr)) 6px max(var(--pad),var(--gl));scroll-padding-inline:max(var(--pad),var(--gl));scrollbar-width:none}
+.murs-car::-webkit-scrollbar{display:none}
+.murs-car .paste{flex:0 0 78vw;grid-column:auto!important;grid-row:auto!important;margin-top:0!important;scroll-snap-align:start;transform:rotate(var(--r))!important}
+.murs .p1{padding:18px 20px;gap:10px}
+.murs .p1 p:first-of-type{font-size:17px}
+.murs .p1 p{font-size:14px}
+}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -806,6 +821,8 @@ $('#copy').onclick=async()=>{const b=$('#copy'),t=$('#mail').textContent; try{aw
     scroller.addEventListener('scroll',up,{passive:true}); addEventListener('resize',up); addEventListener('load',up); up();
   }
   const ts=$('#trackWrap .track-stick'); if(ts) car(ts,$('#trackWrap'),'.shot',null);
+  const dt=$('#details'); if(dt){const w=document.createElement('div'); w.className='car-host'; dt.parentNode.insertBefore(w,dt); w.appendChild(dt); car(dt,w,'.det','.det .ph');}
+  if(innerWidth<861){const mb=$('.murs-body'), p1=$('.murs .p1'); if(mb&&p1){const h=document.createElement('div'); h.className='car-host murs-host'; const mc=document.createElement('div'); mc.className='murs-car'; $$('.murs .p2,.murs .p3,.murs .p4,.murs .p5').forEach(f=>mc.appendChild(f)); h.appendChild(mc); mb.insertBefore(h,p1); car(mc,h,'.paste','.paste .ph');}}
   const st=$('#mano .steps'); if(st){const w=document.createElement('div'); w.className='car-host'; st.parentNode.insertBefore(w,st); w.appendChild(st); car(st,w,'li','li .vis');}
 })();
 </script>
